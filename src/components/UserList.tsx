@@ -14,19 +14,22 @@ import React, { useState, useEffect } from 'react';
         loadUsers();
       }, []);
 
-      const loadUsers = async () => {
-        setIsLoading(true);
-        try {
-          const { data, error } = await supabase.rpc('get_profiles_with_email');
+const loadUsers = async () => {
+  setIsLoading(true);
+  try {
+    // Ensure 'get_profiles_with_email' is the correct function name
+    const { data, error } = await supabase.rpc('get_profiles_with_email');
+    
+    if (error) throw error;
+    console.log("Loaded users:", data);  // Check if the data is being returned
+    setUsers(data || []);
+  } catch (error: any) {
+    toast.error(error.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-          if (error) throw error;
-          setUsers(data || []);
-        } catch (error: any) {
-          toast.error(error.message);
-        } finally {
-          setIsLoading(false);
-        }
-      };
 
       const handleDelete = async (id: string) => {
         try {
